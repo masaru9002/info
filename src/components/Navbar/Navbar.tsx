@@ -5,7 +5,7 @@ import MobileMenu from "./MobileMenu";
 import { NAV_ITEMS } from "./navData";
 import AboutModal from "../AboutModal";
 import CodingModal from "../CodingModal";
-import ArtworkModal from "../ArtworkModal";
+import ArtworkModal from "../Artworks/ArtworkModal";
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

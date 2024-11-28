@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import Modal from "./Modal/Modal";
+import Modal from "../Modal/Modal";
 import { gsap } from "gsap";
 
 interface ArtworkModalProps {
