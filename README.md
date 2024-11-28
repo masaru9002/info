@@ -1,50 +1,49 @@
-# React + TypeScript + Vite
+# 🌌 Portfolio Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<div align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/ThreeJS-black?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
+  <img src="https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white" alt="GSAP" />
+</div>
 
-Currently, two official plugins are available:
+<div align="center">
+  <p>My first attempt at making a portfolio website using Three.js! It's mainly for my Twitter art account <a href="https://twitter.com/sillycat4725" target="_blank">@sillycat4725</a>, but I hope it'll somewhat impress my future employers too :<</p>
+</div>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- 🌠 **Interactive Galaxy Background**: A Three.js-powered cosmic scene (I love space) with:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+  - Dynamic galaxy generation
+  - Ethereal nebula clouds
+  - Twinkling star field
+  - Smooth orbital controls
 
-- Configure the top-level `parserOptions` property like this:
+- 🎭 **Sleek Animations**: Polished transitions and effects using GSAP (GSAP my beloved):
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+  - Smooth component entrances
+  - Modal transitions
+  - Text animations
+  - Interactive hover effects
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- 📱 **Fully Responsive**: Beautiful experience across all devices:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+  - Optimized mobile performance
+  - Adaptive layout design
+  - Touch-friendly interactions
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- 🎨 **Modern UI Elements**:
+  - Glass-morphism effects
+  - Dynamic color gradients
+  - Neon accents
+  - Beautiful typography
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React + TypeScript
+- **3D Graphics**: Three.js
+- **Animations**: GSAP
+- **Styling**: Tailwind CSS
+- **Typography**: Space Grotesk
+- **Icons**: React Icons
