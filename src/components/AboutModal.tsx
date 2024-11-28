@@ -29,9 +29,9 @@ const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
       </p>
       <p>
         You can hire me for either your tech project or for an art commission. I
-        will happily reply to any inquiries when I'm available. My prices are
-        flexible and provides a great balance between the Eastern and Western
-        market. More information can be found in the other tabs!
+        will happily reply to any inquiries when available and provide
+        reasonable pricing that balances Eastern and Western market rates. More
+        information can be found in the other tabs!
       </p>
     </Modal>
   );
