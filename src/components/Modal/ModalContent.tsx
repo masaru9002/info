@@ -9,7 +9,7 @@ interface ModalContentProps {
 
 const ModalContent: React.FC<ModalContentProps> = ({ title, children }) => {
   return (
-    <div className="relative bg-[#0a001f]/60 backdrop-blur-xl rounded-2xl overflow-hidden">
+    <div className="relative bg-[#0a001f]/50 backdrop-blur-xl rounded-2xl overflow-hidden">
       <div className="font-['Space_Grotesk'] relative z-10 p-6 sm:p-8 border border-white/10">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
           {title}

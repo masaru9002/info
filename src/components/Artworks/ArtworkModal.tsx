@@ -1,7 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "../Modal/Modal";
 import { gsap } from "gsap";
-import { FaChevronLeft, FaChevronRight, FaPause, FaPlay } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaPause,
+  FaPlay,
+  FaExternalLinkAlt,
+} from "react-icons/fa";
 import { artworks } from "./Artworks";
 
 interface ArtworkModalProps {
@@ -35,7 +41,6 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ isOpen, onClose }) => {
       startAutoplay();
     }
     return () => stopAutoplay();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, isPlaying, currentIndex]);
 
   const startAutoplay = () => {
@@ -112,7 +117,10 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose} title="🎨 Artwork Gallery o(≧▽≦)o">
       <div className="relative w-full max-w-4xl mx-auto">
         <div className="relative overflow-hidden rounded-xl">
-          <div ref={slideRef} className="relative w-full h-[80vh]">
+          <div
+            ref={slideRef}
+            className="relative w-full h-[60vh] sm:h-[70vh] md:h-[80vh]"
+          >
             {artworks.map((artwork, index) => (
               <div
                 key={artwork.id}
@@ -120,11 +128,21 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ isOpen, onClose }) => {
                   index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
                 }`}
               >
-                <div className="relative w-full h-full flex items-center justify-center group">
+                <a
+                  href={artwork.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="relative w-full h-full flex items-center justify-center group cursor-pointer"
+                  onClick={(e) => {
+                    if (isMobile) {
+                      e.preventDefault();
+                    }
+                  }}
+                >
                   <img
                     src={artwork.url}
                     alt={artwork.title}
-                    className="max-w-full max-h-full object-contain"
+                    className="w-full h-full object-contain"
                   />
                   <div
                     className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent 
@@ -136,7 +154,7 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ isOpen, onClose }) => {
                       transition-opacity duration-300`}
                   />
                   <div
-                    className={`absolute bottom-0 left-0 right-0 p-6 text-white
+                    className={`absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white
                       ${
                         isMobile
                           ? "translate-y-0"
@@ -144,10 +162,19 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ isOpen, onClose }) => {
                       } 
                       transition-transform duration-300`}
                   >
-                    <h3 className="text-2xl font-bold mb-2">{artwork.title}</h3>
-                    <p className="text-white/90">{artwork.description}</p>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xl sm:text-2xl font-bold">
+                        {artwork.title}
+                      </h3>
+                      {!isMobile && (
+                        <FaExternalLinkAlt className="text-white/70 group-hover:text-white transition-colors duration-300" />
+                      )}
+                    </div>
+                    <p className="text-white/90 text-sm sm:text-base line-clamp-2 sm:line-clamp-none">
+                      {artwork.description}
+                    </p>
                   </div>
-                </div>
+                </a>
               </div>
             ))}
           </div>
@@ -155,17 +182,17 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ isOpen, onClose }) => {
 
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-white/90 hover:bg-white/20 hover:text-white transition-all duration-200 z-20"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-white/90 hover:bg-white/20 hover:text-white transition-all duration-200 z-20"
           disabled={isAnimating}
         >
-          <FaChevronLeft className="text-xl" />
+          <FaChevronLeft className="text-lg sm:text-xl" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-white/90 hover:bg-white/20 hover:text-white transition-all duration-200 z-20"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm text-white/90 hover:bg-white/20 hover:text-white transition-all duration-200 z-20"
           disabled={isAnimating}
         >
-          <FaChevronRight className="text-xl" />
+          <FaChevronRight className="text-lg sm:text-xl" />
         </button>
 
         <div className="flex items-center justify-center gap-4 mt-4">
