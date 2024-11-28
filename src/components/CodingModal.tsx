@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "./Modal/Modal";
-import { FaGithub, FaCode, FaStar } from "react-icons/fa";
+import { FaRocket, FaCode, FaHeart } from "react-icons/fa";
 
 interface CodingModalProps {
   isOpen: boolean;
@@ -9,26 +9,27 @@ interface CodingModalProps {
 
 const projects = [
   {
-    name: "Project Nebula",
+    name: "Dori Bot (Offline)",
     description:
-      "A cosmic-themed web application built with React and Three.js",
-    stars: 128,
-    language: "TypeScript",
-    url: "https://github.com/username/project-nebula",
+      "A purely for fun Genshin Impact themed Discord bot with various minigames like Poker, Trivia, Genshin Wish simulator and other utility commands",
+    stars: 320,
+    language: "TypeScript, Node.js, Discord.js",
+    url: "https://top.gg/bot/997892574150930523",
   },
   {
-    name: "Galaxy Generator",
-    description: "Procedural galaxy generation using WebGL and mathematics",
-    stars: 256,
-    language: "JavaScript",
-    url: "https://github.com/username/galaxy-generator",
+    name: "Three.js Portfolio",
+    description: "Well it's this website hehe XDXD",
+    stars: 69,
+    language: "Typescript, Tailwind, React, Vite",
+    url: "https://github.com/masaru9002/masaru-portfolio",
   },
   {
-    name: "Space Portfolio",
-    description: "An interactive 3D space-themed portfolio website",
-    stars: 512,
-    language: "TypeScript",
-    url: "https://github.com/username/space-portfolio",
+    name: "Dsdle",
+    description:
+      "A joke project for my friend group - Wordle clone with our inside jokes as the words",
+    stars: 10,
+    language: "HTML, CSS, Javascript",
+    url: "https://github.com/masaru9002/dsdle",
   },
 ];
 
@@ -49,13 +50,13 @@ const CodingModal: React.FC<CodingModalProps> = ({ isOpen, onClose }) => {
               <div className="relative">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <FaGithub className="text-2xl text-white/90" />
+                    <FaRocket className="text-2xl text-white/90" />
                     <h3 className="text-xl font-bold text-white/90">
                       {project.name}
                     </h3>
                   </div>
                   <div className="flex items-center gap-2 text-white/70">
-                    <FaStar className="text-yellow-500" />
+                    <FaHeart className="text-red-400" />
                     <span>{project.stars}</span>
                   </div>
                 </div>
