@@ -2,16 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import NavItem from "./NavItem";
 import MobileMenu from "./MobileMenu";
-import { NAV_ITEMS } from "./navData";
 import AboutModal from "../AboutModal";
 import CodingModal from "../CodingModal";
 import ArtworkModal from "../Artworks/ArtworkModal";
+import { NAV_ITEMS } from "./navData";
+import ContactModal from "../ContactModal";
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isCodingModalOpen, setIsCodingModalOpen] = useState(false);
   const [isArtworkModalOpen, setIsArtworkModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const navRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -76,6 +78,9 @@ const Navbar: React.FC = () => {
       case "Artwork":
         setIsArtworkModalOpen(true);
         break;
+      case "Contact":
+        setIsContactModalOpen(true);
+        break;
     }
     if (isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
@@ -138,6 +143,10 @@ const Navbar: React.FC = () => {
       <ArtworkModal
         isOpen={isArtworkModalOpen}
         onClose={() => setIsArtworkModalOpen(false)}
+      />
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
     </>
   );
