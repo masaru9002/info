@@ -47,11 +47,11 @@ const CodingModal: React.FC<CodingModalProps> = ({ isOpen, onClose }) => {
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="block group"
+            className="block transform-gpu"
           >
-            <div className="relative overflow-hidden rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 p-4 sm:p-6 transition-all duration-300 hover:bg-white/10 hover:scale-[1.02] hover:shadow-xl">
+            <div className="relative overflow-hidden rounded-xl bg-white/5 backdrop-blur-sm border border-white/10 p-4 sm:p-6 transition-all duration-300 hover:bg-white/10 group">
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative">
+              <div className="relative transform-gpu transition-transform duration-300 group-hover:scale-[1.02]">
                 <div className="flex items-center justify-between mb-2 sm:mb-3">
                   <div className="flex items-center gap-2 sm:gap-3">
                     <FaRocket className="text-xl sm:text-2xl text-white/90" />
