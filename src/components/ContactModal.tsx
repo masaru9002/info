@@ -35,7 +35,11 @@ const socialLinks = [
 
 const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Text me whenever!">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="💌 Text me whenever! (￣▽￣)ノ"
+    >
       <div className="space-y-6">
         {socialLinks.map((link, index) => (
           <a

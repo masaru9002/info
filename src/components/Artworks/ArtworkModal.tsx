@@ -109,7 +109,7 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Artwork Gallery">
+    <Modal isOpen={isOpen} onClose={onClose} title="🎨 Artwork Gallery o(≧▽≦)o">
       <div className="relative w-full max-w-4xl mx-auto">
         <div className="relative overflow-hidden rounded-xl">
           <div ref={slideRef} className="relative w-full h-[80vh]">

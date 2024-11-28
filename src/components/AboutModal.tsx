@@ -8,7 +8,11 @@ interface AboutModalProps {
 
 const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="About Masaru">
+    <Modal isOpen={isOpen} onClose={onClose} title="✨ About Masaru (*≧ω≦*)">
+      <p>
+        I'm a 21 year-old Asian Software Engineering student in his third year.
+        I can speak both English and Japanese.
+      </p>
       <p>
         I go by{" "}
         <a

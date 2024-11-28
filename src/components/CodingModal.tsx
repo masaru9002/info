@@ -35,7 +35,11 @@ const projects = [
 
 const CodingModal: React.FC<CodingModalProps> = ({ isOpen, onClose }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Coding Projects">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="💻 Coding Projects ( ͡⎚ ω ͡⎚)"
+    >
       <div className="space-y-6">
         {projects.map((project, index) => (
           <a
