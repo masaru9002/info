@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+canvas {
+  touch-action: none;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+@keyframes border-chase {
+  0%,
+  100% {
+    background-position: 0% 0;
+  }
+  50% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-border-chase {
+  --border-size: 3px;
+  --border-bg: #0a001f;
+
+  background: linear-gradient(
+    90deg,
+    #ff3080 0%,
+    #4560ff 33.33%,
+    #9932cc 66.66%,
+    #ff3080 100%
+  );
+  background-size: 200% 100%;
+  animation: border-chase 3s linear infinite;
+
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: var(--border-size);
+  border-radius: 1rem;
+  pointer-events: none;
+}
