@@ -20,16 +20,16 @@ const projects = [
     name: "Three.js Portfolio",
     description: "Well it's this website hehe XDXD",
     stars: 69,
-    language: "Typescript, Tailwind, React, Vite",
+    language: "React, Typescript, Tailwind, Vite",
     url: "https://github.com/masaru9002/masaru-portfolio",
   },
   {
-    name: "Dsdle",
+    name: "Inari (WIP)",
     description:
-      "A joke project for my friend group - Wordle clone with our inside jokes as the words",
+      "A Webapp for learning Japanese with cute Anime study buddies - made with love and experience from studying abroad in Japan",
     stars: 10,
-    language: "HTML, CSS, Javascript",
-    url: "https://github.com/masaru9002/dsdle",
+    language: "Vue, Typescript, Tailwind, Vite, Express.js, MongoDB",
+    url: "https://github.com/InariJP",
   },
 ];
 
