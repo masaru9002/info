@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import ModalContent from "./ModalContent";
 import ModalBackground from "./ModalBackground";
+import ModalCloseButton from "./ModalCloseButton";
 
 interface ModalProps {
   isOpen: boolean;
@@ -14,84 +15,94 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [isClosing, setIsClosing] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (isOpen && modalRef.current && contentRef.current) {
+    if (isOpen) {
+      setIsVisible(true);
       setIsClosing(false);
-      // Reset initial state
-      gsap.set(modalRef.current, { opacity: 0 });
-      gsap.set(contentRef.current, {
-        scale: 0.5,
-        opacity: 0,
-        rotationX: 45,
-        y: 0,
-      });
 
-      // Create animation timeline
-      const tl = gsap.timeline();
+      if (modalRef.current && contentRef.current) {
+        // Reset initial state
+        gsap.set(modalRef.current, {
+          visibility: "visible",
+          pointerEvents: "auto",
+        });
+        gsap.set(contentRef.current, {
+          scale: 0.5,
+          yPercent: -5,
+          rotationX: 45,
+          force3D: true,
+          transformPerspective: 1000,
+          transformOrigin: "50% 50%",
+        });
 
-      tl.to(modalRef.current, {
-        opacity: 1,
-        duration: 0.3,
-        ease: "power2.out",
-      }).to(
-        contentRef.current,
-        {
-          scale: 1,
-          opacity: 1,
-          rotationX: 0,
-          duration: 0.5,
-          ease: "back.out(1.7)",
-        },
-        "-=0.1"
-      );
+        // Create animation timeline with reduced complexity
+        gsap
+          .timeline({
+            defaults: { duration: 0.4, ease: "power2.out" },
+          })
+          .to(contentRef.current, {
+            scale: 1,
+            yPercent: 0,
+            rotationX: 0,
+            clearProps: "rotationX,scale,yPercent", // Only clear animation-specific properties
+          });
+      }
     }
   }, [isOpen]);
 
   const handleClose = () => {
-    if (modalRef.current && contentRef.current) {
+    if (!isClosing && modalRef.current && contentRef.current) {
       setIsClosing(true);
 
-      const tl = gsap.timeline({
-        onComplete: () => {
-          onClose();
-          setIsClosing(false);
-        },
-      });
-
-      tl.to(contentRef.current, {
-        scale: 0.8,
-        opacity: 0,
-        rotationX: -45,
-        y: 100,
-        duration: 0.4,
-        ease: "power2.in",
-      }).to(
-        modalRef.current,
-        {
-          opacity: 0,
-          duration: 0.3,
-          ease: "power2.in",
-        },
-        "-=0.2"
-      );
+      gsap
+        .timeline({
+          defaults: { duration: 0.3, ease: "power2.in" },
+          onComplete: () => {
+            onClose();
+            setIsClosing(false);
+            setIsVisible(false);
+          },
+        })
+        .to(contentRef.current, {
+          scale: 0.9,
+          yPercent: 5,
+          rotationX: -45,
+          force3D: true,
+        })
+        .set(modalRef.current, {
+          visibility: "hidden",
+          pointerEvents: "none",
+        });
     }
   };
 
-  if (!isOpen && !isClosing) return null;
+  if (!isVisible && !isOpen) return null;
 
   return (
     <div
       ref={modalRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 perspective-1000"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{
+        visibility: "hidden",
+        perspective: "1000px",
+        willChange: "transform",
+        backfaceVisibility: "hidden",
+      }}
     >
       <ModalBackground onClose={handleClose} />
       <div
         ref={contentRef}
         className="relative z-10 w-full max-w-2xl"
-        style={{ transformStyle: "preserve-3d" }}
+        style={{
+          willChange: "transform",
+          transformStyle: "preserve-3d",
+          backfaceVisibility: "hidden",
+        }}
       >
         <ModalContent title={title}>{children}</ModalContent>
+        <ModalCloseButton onClose={handleClose} />
       </div>
     </div>
   );
