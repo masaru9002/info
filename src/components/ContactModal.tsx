@@ -1,6 +1,7 @@
 import React from "react";
 import Modal from "./Modal/Modal";
 import { FaDiscord, FaTwitter, FaEnvelope } from "react-icons/fa";
+import { SiPixiv } from "react-icons/si";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -22,6 +23,13 @@ const socialLinks = [
     icon: FaTwitter,
     color: "#1DA1F2",
     href: "https://twitter.com/sillycat4725",
+  },
+  {
+    name: "Pixiv",
+    value: "フザケ猫",
+    icon: SiPixiv,
+    color: "#0096FA",
+    href: "https://www.pixiv.net/en/users/99556221",
   },
   {
     name: "Email",
