@@ -2,6 +2,7 @@ import Background from "./components/Background";
 import TypewriterText from "./components/TypewriterText";
 import Navbar from "./components/Navbar/Navbar";
 import "@fontsource/space-grotesk";
+import VisitorCounter from "./components/VisitorCounter";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <TypewriterText />
         </div>
       </main>
+      <VisitorCounter />
     </div>
   );
 }
