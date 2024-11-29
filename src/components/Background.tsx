@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { StarField } from "./StarField";
 import { gsap } from "gsap";
-import { getScreenConfig, getGalaxyParams } from "./ScreenUtils";
+import { getScreenConfig, getGalaxyParams } from "../utils/ScreenUtils";
 
 export const nebulaVertexShader = `
 varying vec3 vColor;

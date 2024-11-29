@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { getScreenConfig } from "./ScreenUtils";
+import { getScreenConfig } from "../utils/ScreenUtils";
 
 const starFieldVertexShader = `
 attribute float size;
