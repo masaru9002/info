@@ -20,9 +20,13 @@ export const subscribeToVisitorCount = (callback: (count: number) => void) => {
   });
 };
 
-export const incrementVisitorCount = async (): Promise<number> => {
-  console.log("Attempting to increment visitor count");
+export const getVisitorCount = async (): Promise<number> => {
+  const visitorCountRef = ref(database, "visitorCount/count");
+  const snapshot = await get(visitorCountRef);
+  return snapshot.val() || 0;
+};
 
+export const incrementVisitorCount = async (): Promise<number> => {
   const auth = getAuth();
   if (!auth.currentUser) {
     await signInAnonymously(auth).catch((error) => {
@@ -33,7 +37,6 @@ export const incrementVisitorCount = async (): Promise<number> => {
 
   const userId = auth.currentUser?.uid;
   if (!userId) {
-    console.error("No user ID found after sign-in.");
     return 0;
   }
 
@@ -47,25 +50,20 @@ export const incrementVisitorCount = async (): Promise<number> => {
     const isNewVisitor = await get(uniqueVisitorsRef);
 
     if (!isNewVisitor.exists()) {
-      // Mark the user as a unique visitor
       await update(ref(database, "visitorCount/uniqueVisitors"), {
         [userId]: true,
       });
 
-      // Atomically increment the visitor count
       const result = await runTransaction(visitorCountRef, (currentCount) => {
         return (currentCount || 0) + 1;
       });
 
       if (result.committed) {
-        console.log("Visitor count updated:", result.snapshot.val());
         return result.snapshot.val();
       } else {
-        console.error("Transaction aborted");
         return 0;
       }
     } else {
-      console.log("User already visited, no increment.");
       const snapshot = await get(visitorCountRef);
       return snapshot.val();
     }
