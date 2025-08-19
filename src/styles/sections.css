@@ -1,0 +1,444 @@
+.commission-info-card {
+  flex: 1 1 40%;
+  max-width: 40%;
+  min-width: 0;
+  background: #faf8f4;
+  background-image: radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 255, 255, 0.8) 0%,
+      transparent 80%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.2) 0px,
+      rgba(255, 255, 255, 0.2) 32px,
+      rgba(0, 0, 0, 0.04) 33px,
+      rgba(255, 255, 255, 0.2) 34px
+    );
+  border-radius: 0;
+  padding: 2rem 1.6rem 1.6rem 2.5rem;
+  margin-top: 0;
+  margin-left: 0;
+  color: var(--color-ink);
+  font-size: 1rem;
+  border: 1.5px solid rgba(225, 219, 213, 0.8);
+  position: relative;
+  overflow: visible;
+}
+
+.commissions-main {
+  flex: 1 1 60%;
+  min-width: 0;
+  max-width: 60%;
+}
+
+.commission-info-card::before {
+  content: "";
+  position: absolute;
+  left: 0.55rem;
+  top: 0.8rem;
+  bottom: 0.8rem;
+  width: 0.18rem;
+  background: linear-gradient(
+    to bottom,
+    var(--color-accent) 85%,
+    transparent 100%
+  );
+  border-radius: 0;
+  z-index: 2;
+}
+.commission-info-card::after {
+  content: "";
+  position: absolute;
+  left: 0.2rem;
+  .commissions-main {
+    flex: 1 1 60%;
+    min-width: 0;
+    max-width: 60%;
+  }
+  top: 1rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: #fff;
+  border: 2px solid var(--color-accent);
+  border-radius: 0;
+  box-shadow: 0 2.1rem 0 0 #fff, 0 2.1rem 0 0 var(--color-accent),
+    0 4.2rem 0 0 #fff, 0 4.2rem 0 0 var(--color-accent), 0 6.3rem 0 0 #fff,
+    0 6.3rem 0 0 var(--color-accent);
+  z-index: 3;
+}
+
+.commission-info-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  margin: 0 0 1.1rem 0;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+  text-shadow: 0 1px 0 #fff, 0 2px 0 rgba(225, 219, 213, 0.8);
+}
+
+.commission-info-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.commission-info-card li {
+  font-size: clamp(0.97rem, 1.3vw, 1.13rem);
+  font-weight: 400;
+  line-height: 1.35;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  letter-spacing: 0.01em;
+  position: relative;
+  padding-left: 1.2em;
+  text-transform: none;
+}
+
+@media (max-width: 900px) {
+  .commission-info-card {
+    margin-left: 0;
+    margin-top: 2.2rem;
+    width: 100%;
+    max-width: 420px;
+  }
+  .commissions-flex {
+    flex-direction: column;
+    gap: 2.2rem;
+  }
+  .commissions-main {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.commissions-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+  width: 100%;
+}
+.commissions-main {
+  flex: 1 1 50%;
+  min-width: 0;
+  max-width: 60%;
+}
+
+.commission-slots {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 2.2rem 0 1.2rem;
+}
+.slot {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--color-bg-alt);
+  border: 2.5px solid var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: 0 2px 8px -2px rgba(225, 45, 45, 0.07);
+  transition: background 0.3s, color 0.3s, border 0.3s;
+  user-select: none;
+}
+.slot--taken {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+  opacity: 0.65;
+}
+.slot--open {
+  background: var(--color-bg-alt);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  opacity: 1;
+}
+.commission-btn {
+  font-size: 1.1rem;
+  padding: 1.1rem 2.2rem 1.05rem;
+  border-radius: 0;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent) 0%,
+    var(--color-accent-alt) 100%
+  );
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 18px -6px var(--color-accent);
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: background 0.4s, box-shadow 0.4s, opacity 0.3s;
+}
+.commission-btn:hover {
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-alt) 0%,
+    var(--color-accent) 100%
+  );
+  box-shadow: 0 8px 32px -8px var(--color-accent-alt);
+}
+.btn--disabled {
+  filter: grayscale(0.7);
+  cursor: not-allowed;
+}
+
+.section {
+  padding: clamp(4.5rem, 16vh, 10rem) 0 0;
+  position: relative;
+}
+.section__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.9rem, 7vw, 6.6rem);
+  line-height: 0.83;
+  letter-spacing: 0.02em;
+  margin: 0 0 1.8rem;
+}
+.lead {
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.35;
+}
+.prose {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-ink-soft);
+}
+.prose p + p {
+  margin-top: 1rem;
+}
+
+.about {
+  --flow-space: 1.4rem;
+}
+.contact__list {
+  list-style: none;
+  margin: 2.2rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+.contact__link {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  position: relative;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.contact__link::before {
+  content: "→";
+  font-size: 0.8rem;
+  transition: transform 0.5s var(--ease-out);
+}
+.contact__link:hover::before {
+  transform: translateX(4px);
+}
+.contact__link:hover {
+  color: var(--color-accent);
+}
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+.rule::before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-ink) 0, #0000 100%);
+}
+
+.fade-seq {
+  opacity: 1;
+  transform: none;
+}
+
+@media (max-width: 1024px) {
+  .section {
+    padding: clamp(3.5rem, 12vh, 8rem) 0 0;
+  }
+
+  .section__title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+  }
+
+  .commissions-flex {
+    gap: 2rem;
+  }
+
+  .commission-info-card {
+    max-width: 45%;
+  }
+}
+
+@media (max-width: 900px) {
+  .commissions-flex {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .commissions-main {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .commission-info-card {
+    margin-left: 0;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 100%;
+    padding: 1.8rem 1.4rem 1.4rem 2.2rem;
+  }
+
+  .commission-info-card h3 {
+    font-size: 1.6rem;
+  }
+
+  .commission-info-card li {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: clamp(3rem, 10vh, 6rem) 0 0;
+  }
+
+  .section__title {
+    font-size: clamp(2.2rem, 7vw, 4rem);
+    margin: 0 0 1.5rem;
+  }
+
+  .lead {
+    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+  }
+
+  .commission-slots {
+    gap: 0.8rem;
+    margin: 1.8rem 0 1rem;
+    flex-wrap: wrap;
+  }
+
+  .slot {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.6rem;
+    border-width: 2px;
+  }
+
+  .commission-btn {
+    font-size: 0.95rem;
+    padding: 1rem 1.8rem 0.95rem;
+    letter-spacing: 0.15em;
+  }
+
+  .contact__list {
+    margin: 1.8rem 0 0;
+    gap: 0.7rem;
+  }
+
+  .contact__link {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+  }
+
+  .site-footer {
+    margin-top: 3rem;
+    padding: 2rem 0 3rem;
+    font-size: 0.55rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section__title {
+    font-size: 2rem;
+    line-height: 0.9;
+  }
+
+  .lead {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .prose {
+    font-size: 0.9rem;
+  }
+
+  .commission-slots {
+    gap: 0.6rem;
+  }
+
+  .slot {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.3rem;
+  }
+
+  .commission-btn {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.95rem 1.5rem 0.9rem;
+  }
+
+  .btn--disabled {
+    font-size: 0.75rem;
+  }
+
+  .commission-info-card {
+    padding: 1.5rem 1.2rem 1.2rem 2rem;
+    font-size: 0.9rem;
+  }
+
+  .commission-info-card h3 {
+    font-size: 1.4rem;
+    margin: 0 0 0.9rem 0;
+  }
+
+  .commission-info-card ul {
+    gap: 0.6rem;
+  }
+
+  .commission-info-card li {
+    font-size: 0.9rem;
+    padding-left: 1em;
+  }
+
+  .contact__link {
+    font-size: 0.6rem;
+    padding: 0.5rem 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .commission-slots {
+    justify-content: center;
+  }
+
+  .slot {
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.1rem;
+  }
+}
