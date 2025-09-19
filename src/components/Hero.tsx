@@ -305,7 +305,7 @@ function Hero() {
               ))}
             </h1>
             <p ref={kickerRef} className="hero__kicker">
-              Hello, I'm Sillycat4725, currently training as a freelance
+              Hello, I'm Sillycat4725, currently practicing as a freelance
               illustrator! I try to keep my artstyle flexible and always pay
               great attention to detail.
             </p>
