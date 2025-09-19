@@ -6,6 +6,7 @@ import Hero from "./components/Hero";
 import { Gallery } from "./components/Gallery";
 import { About } from "./components/About";
 import { Contact } from "./components/Contact";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import { setLenisInstance } from "./lenisInstance";
 
 const App: React.FC = () => {
@@ -37,16 +38,18 @@ const App: React.FC = () => {
     };
   }, []);
   return (
-    <div id="page-fade" ref={fadeRef} style={{ opacity: 0 }}>
-      <a id="top" />
-      <Nav />
-      <Hero />
-      <main>
-        <Gallery />
-        <About />
-        <Contact />
-      </main>
-    </div>
+    <ThemeProvider>
+      <div id="page-fade" ref={fadeRef} style={{ opacity: 0 }}>
+        <a id="top" />
+        <Nav />
+        <Hero />
+        <main>
+          <Gallery />
+          <About />
+          <Contact />
+        </main>
+      </div>
+    </ThemeProvider>
   );
 };
 

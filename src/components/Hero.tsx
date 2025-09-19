@@ -328,13 +328,16 @@ function Hero() {
             className="hero__art"
             aria-label="Featured character illustration placeholder"
           >
-            <img
-              ref={imgRef}
-              src="/izuna.png"
-              alt="Character placeholder"
-              loading="lazy"
-              draggable={false}
-            />
+            <picture>
+              <source srcSet="/izuna.webp" type="image/webp" />
+              <img
+                ref={imgRef}
+                src="/izuna.png"
+                alt="Character placeholder"
+                loading="lazy"
+                draggable={false}
+              />
+            </picture>
           </figure>
         </div>
       </div>

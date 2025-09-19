@@ -2,18 +2,18 @@
   flex: 1 1 40%;
   max-width: 40%;
   min-width: 0;
-  background: #faf8f4;
+  background: var(--color-bg);
   background-image: radial-gradient(
       circle at 20% 20%,
-      rgba(255, 255, 255, 0.8) 0%,
+      var(--color-bg-alt) 0%,
       transparent 80%
     ),
     repeating-linear-gradient(
       to bottom,
-      rgba(255, 255, 255, 0.2) 0px,
-      rgba(255, 255, 255, 0.2) 32px,
-      rgba(0, 0, 0, 0.04) 33px,
-      rgba(255, 255, 255, 0.2) 34px
+      var(--color-bg-alt) 0px,
+      var(--color-bg-alt) 32px,
+      var(--color-line) 33px,
+      var(--color-bg-alt) 34px
     );
   border-radius: 0;
   padding: 2rem 1.6rem 1.6rem 2.5rem;
@@ -21,7 +21,7 @@
   margin-left: 0;
   color: var(--color-ink);
   font-size: 1rem;
-  border: 1.5px solid rgba(225, 219, 213, 0.8);
+  border: 1.5px solid var(--color-line);
   position: relative;
   overflow: visible;
 }
@@ -30,6 +30,7 @@
   flex: 1 1 60%;
   min-width: 0;
   max-width: 60%;
+  padding-right: 1.6rem;
 }
 
 .commission-info-card::before {
@@ -51,20 +52,15 @@
   content: "";
   position: absolute;
   left: 0.2rem;
-  .commissions-main {
-    flex: 1 1 60%;
-    min-width: 0;
-    max-width: 60%;
-  }
   top: 1rem;
   width: 0.75rem;
   height: 0.75rem;
-  background: #fff;
+  background: var(--color-bg-alt);
   border: 2px solid var(--color-accent);
   border-radius: 0;
-  box-shadow: 0 2.1rem 0 0 #fff, 0 2.1rem 0 0 var(--color-accent),
-    0 4.2rem 0 0 #fff, 0 4.2rem 0 0 var(--color-accent), 0 6.3rem 0 0 #fff,
-    0 6.3rem 0 0 var(--color-accent);
+  box-shadow: 0 2.1rem 0 0 var(--color-bg-alt), 0 2.1rem 0 0 var(--color-accent),
+    0 4.2rem 0 0 var(--color-bg-alt), 0 4.2rem 0 0 var(--color-accent),
+    0 6.3rem 0 0 var(--color-bg-alt), 0 6.3rem 0 0 var(--color-accent);
   z-index: 3;
 }
 
@@ -74,7 +70,7 @@
   margin: 0 0 1.1rem 0;
   letter-spacing: 0.04em;
   color: var(--color-accent);
-  text-shadow: 0 1px 0 #fff, 0 2px 0 rgba(225, 219, 213, 0.8);
+  text-shadow: 0 1px 0 var(--color-bg-alt), 0 2px 0 var(--color-line);
 }
 
 .commission-info-card ul {
@@ -112,6 +108,8 @@
   .commissions-main {
     width: 100%;
     max-width: 100%;
+    /* remove desktop-only right padding on mobile */
+    padding-right: 0;
   }
 }
 
@@ -127,6 +125,7 @@
   flex: 1 1 50%;
   min-width: 0;
   max-width: 60%;
+  padding-right: 1.6rem;
 }
 
 .commission-slots {
@@ -302,6 +301,8 @@
   .commissions-main {
     width: 100%;
     max-width: 100%;
+    /* ensure no right padding on mobile */
+    padding-right: 0 !important;
   }
 
   .commission-info-card {

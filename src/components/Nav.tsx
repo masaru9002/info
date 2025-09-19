@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react";
 import { getLenisInstance } from "../lenisInstance";
+import { useTheme } from "../contexts/ThemeContext";
 
 export const Nav: React.FC = () => {
   const [active, setActive] = useState<string>("");
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handler = () => {
@@ -71,6 +74,19 @@ export const Nav: React.FC = () => {
           >
             Commission
           </a>
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${
+              theme === "light" ? "dark" : "light"
+            } mode`}
+            aria-pressed={theme === "dark"}
+            title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+          >
+            <span className="theme-toggle__label">
+              {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+            </span>
+          </button>
         </div>
       </div>
     </nav>
