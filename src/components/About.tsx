@@ -126,16 +126,22 @@ export const About: React.FC = () => {
               }}
             >
               💡 Slots update automatically! Refresh the page for the latest
-              status. A slot will be filled once we've talked → client is
-              satisfied with the sketch → payment is confirmed!
+              status. A slot will be filled once payment is confirmed!
             </p>
           </div>
         </div>
         <aside className="commission-info-card fade-seq">
           <h3>Commission Info</h3>
           <ul>
+            <li>
+              (Prices may change depending on character complexity. You can pay
+              extra if you need the drawing asap)
+            </li>
             <li>Turnaround: 2-4 weeks</li>
-            <li>Payment: Sketch first, payment after via Ko-fi</li>
+            <li>
+              Payment: Payment upfront via Ko-fi. I will DM the client updates
+              weekly!
+            </li>
             <li>
               • Emote/Icon: <b>$15</b>
             </li>
@@ -149,7 +155,7 @@ export const About: React.FC = () => {
             <li>What I draw:</li>
             <li>• Mostly girls and simple backgrounds.</li>
             <li>• I rarely draw men but I will try if you need.</li>
-            <li>• I can't draw furry and kemono, sorry.</li>
+            <li>• I can't draw furry and kemono (with a few exceptions).</li>
           </ul>
         </aside>
       </div>
