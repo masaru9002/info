@@ -1,56 +1,36 @@
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import Lenis from "@studio-freight/lenis";
-import { Nav } from "./components/Nav";
-import Hero from "./components/Hero";
-import { Gallery } from "./components/Gallery";
-import { About } from "./components/About";
-import { Contact } from "./components/Contact";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import { setLenisInstance } from "./lenisInstance";
+import { SmoothScroll } from "./components/smooth-scroll";
+import { Hero } from "./components/hero";
+import { Works } from "./components/works";
+import { Clients } from "./components/clients";
+import { Contact } from "./components/contact";
+import Ribbons from "./components/Ribbons";
 
-const App: React.FC = () => {
-  const fadeRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    const lenis = new Lenis({
-      lerp: 0.08,
-      gestureOrientation: "vertical",
-      touchMultiplier: 1.5,
-    });
-    setLenisInstance(lenis);
+export const API_URL = "http://localhost:4000/api"; // not gonna hide it since its not anything sensitive really
+export const FALLBACK_AVATAR =
+  "https://res.cloudinary.com/do8zlfjb8/image/upload/v1780243677/sillycat5_gak1gv.png";
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    if (fadeRef.current) {
-      gsap.to(fadeRef.current, {
-        opacity: 1,
-        duration: 0.9,
-        ease: "power2.out",
-      });
-    }
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
+export default function App() {
   return (
-    <ThemeProvider>
-      <div id="page-fade" ref={fadeRef} style={{ opacity: 0 }}>
-        <a id="top" />
-        <Nav />
-        <Hero />
-        <main>
-          <Gallery />
-          <About />
-          <Contact />
-        </main>
+    <SmoothScroll>
+      <div
+        className="fixed inset-0 z-9999 pointer-events-none [&_canvas]:pointer-events-none"
+        aria-hidden
+      >
+        <Ribbons
+          baseThickness={15}
+          colors={["#fc5db0"]}
+          speedMultiplier={0.5}
+          maxAge={500}
+          enableFade={false}
+          enableShaderEffect={false}
+        />
       </div>
-    </ThemeProvider>
+      <main className="bg-background text-foreground">
+        <Hero />
+        <Works />
+        <Clients />
+        <Contact />
+      </main>
+    </SmoothScroll>
   );
-};
-
-export default App;
+}

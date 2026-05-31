@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+:root {
+  --font-playfair: "Playfair Display", ui-serif, Georgia, serif;
+  --font-oswald: "Oswald", ui-sans-serif, system-ui, sans-serif;
+
+  --background: oklch(0.145 0.004 280);
+  --foreground: oklch(0.93 0.005 90);
+
+  --surface: oklch(0.185 0.005 280);
+  --surface-2: oklch(0.225 0.006 280);
+
+  --muted: oklch(0.55 0.006 280);
+  --muted-2: oklch(0.4 0.006 280);
+
+  --accent: oklch(70.52% 0.22156 351.26);
+  --accent-foreground: oklch(0.97 0.01 90);
+
+  --line: oklch(0.32 0.006 280);
+  --radius: 0px;
+}
+
+@theme inline {
+  --font-display: var(--font-playfair);
+  --font-sans: var(--font-oswald);
+  --font-mono: var(--font-oswald);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-muted: var(--muted);
+  --color-muted-2: var(--muted-2);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-line: var(--line);
+
+  --radius-none: 0px;
+}
+
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-oswald);
+  }
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 13px;
+  background: var(--color-background);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent);
+  border-radius: 0;
+  border: 3px solid var(--color-background);
+  min-height: 40px;
+  transition: background 0.3s;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+  opacity: 0.8;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+  border-radius: 0;
+}
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) var(--color-background);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+@utility tech-label {
+  font-family: var(--font-oswald);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+}
