@@ -1,13 +1,13 @@
 import { SmoothScroll } from "./components/smooth-scroll";
-import { Hero } from "./components/hero";
+import { Hero } from "./components/Hero";
 import { Works } from "./components/works";
 import { Clients } from "./components/clients";
-import { Contact } from "./components/contact";
+import { Contact } from "./components/Contact";
 import Ribbons from "./components/Ribbons";
 
 // not gonna hide it since its not anything sensitive really
-// export const API_URL = "https://portfolio-api-three-rose.vercel.app/api";
-export const API_URL = "http://localhost:4000/api";
+export const API_URL = "https://portfolio-api-three-rose.vercel.app/api";
+// export const API_URL = "http://localhost:4000/api";
 export const FALLBACK_AVATAR =
   "https://res.cloudinary.com/do8zlfjb8/image/upload/v1780243677/sillycat5_gak1gv.png";
 
