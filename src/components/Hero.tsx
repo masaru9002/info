@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import ShapeGrid from "./ShapeGrid";
 import { API_URL } from "../App";
+import DecryptedText from "./DecryptedText";
 
 export function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -10,6 +11,7 @@ export function Hero() {
   const patRef = useRef<HTMLDivElement>(null);
   const isBeingPatted = useRef(false);
   const patCount = useRef<number | null>(null);
+  const [devRevealed, setDevRevealed] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/pats`)
@@ -357,7 +359,11 @@ export function Hero() {
             >
               @sillycat4725
             </span>
-            <span data-hero-line className="tech-label text-[11px] text-accent">
+            <span
+              data-hero-line
+              className="tech-label text-[12px] text-accent cursor-pointer select-none"
+              onClick={() => setDevRevealed(true)}
+            >
               ฅ₍^•⩊ •マⳊ
             </span>
           </div>
@@ -369,6 +375,16 @@ export function Hero() {
           >
             Hello, I'm SillyCat, a freelance illustrator! I try to keep my
             artstyle flexible and always pay great attention to detail.
+            {devRevealed && (
+              <>
+                <DecryptedText
+                  text="I'm also a full-stack developer if you're interested!"
+                  animateOn="view"
+                  sequential
+                  revealDirection="start"
+                />
+              </>
+            )}
           </p>
 
           <div

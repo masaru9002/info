@@ -38,6 +38,12 @@
   --radius-none: 0px;
 }
 
+[data-hero-line],
+[data-hero-name],
+[data-hero-frame] {
+  visibility: hidden;
+}
+
 @layer base {
   * {
     border-color: var(--line);
