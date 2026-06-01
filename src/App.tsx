@@ -5,7 +5,7 @@ import { Clients } from "./components/clients";
 import { Contact } from "./components/contact";
 import Ribbons from "./components/Ribbons";
 
-export const API_URL = "http://localhost:4000/api"; // not gonna hide it since its not anything sensitive really
+export const API_URL = "https://portfolio-api-three-rose.vercel.app/api"; // not gonna hide it since its not anything sensitive really
 export const FALLBACK_AVATAR =
   "https://res.cloudinary.com/do8zlfjb8/image/upload/v1780243677/sillycat5_gak1gv.png";
 
