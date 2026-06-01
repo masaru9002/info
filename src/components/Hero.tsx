@@ -1,348 +1,444 @@
-import React, { useEffect, useRef } from "react";
-import { getLenisInstance } from "../lenisInstance";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import "../styles/hero.css";
-import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import ShapeGrid from "./ShapeGrid";
+import { API_URL } from "../App";
+import DecryptedText from "./DecryptedText";
 
-function handleHeroScroll(
-  e: React.MouseEvent<HTMLAnchorElement>,
-  id: string,
-  offsetOverride?: number
-) {
-  e.preventDefault();
-  const target = document.getElementById(id);
-  const lenis = getLenisInstance();
-  const offset = typeof offsetOverride === "number" ? offsetOverride : -60;
-  if (target && lenis) {
-    lenis.scrollTo(target, { offset });
-  } else if (target) {
-    const y = target.getBoundingClientRect().top + window.scrollY + offset;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
-}
-
-function Hero() {
-  const titleRef = useRef<HTMLHeadingElement | null>(null);
-  const kickerRef = useRef<HTMLParagraphElement | null>(null);
-  const ctaRef = useRef<HTMLDivElement | null>(null);
-  const imgRef = useRef<HTMLImageElement | null>(null);
-
-  const marqueeRef = useRef<HTMLDivElement | null>(null);
-  const marqueeRefBottom = useRef<HTMLDivElement | null>(null);
-  const trackTopRef = useRef<HTMLDivElement | null>(null);
-  const trackBottomRef = useRef<HTMLDivElement | null>(null);
-
-  const reduce = usePrefersReducedMotion();
+export function Hero() {
+  const root = useRef<HTMLElement>(null);
+  const foxRef = useRef<HTMLImageElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const patRef = useRef<HTMLDivElement>(null);
+  const isBeingPatted = useRef(false);
+  const patCount = useRef<number | null>(null);
+  const [devRevealed, setDevRevealed] = useState(false);
 
   useEffect(() => {
-    if (reduce) {
-      titleRef.current?.querySelectorAll("span").forEach((s: Element) => {
-        (s as HTMLElement).style.transform = "none";
-        (s as HTMLElement).style.opacity = "1";
+    fetch(`${API_URL}/pats`)
+      .then((r) => r.json())
+      .then((data) => {
+        patCount.current = data.count;
       });
-      if (kickerRef.current) kickerRef.current.style.opacity = "1";
-      if (ctaRef.current) ctaRef.current.style.opacity = "1";
-      if (marqueeRef.current) marqueeRef.current.style.transform = "none";
-      if (trackTopRef.current) trackTopRef.current.style.transform = "none";
-      if (trackBottomRef.current)
-        trackBottomRef.current.style.transform = "none";
-      return;
-    }
+  }, []);
 
-    const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        const spans = titleRef.current.querySelectorAll("span");
-        gsap.from(spans, {
-          yPercent: 110,
-          rotate: (i: number) => (i % 2 ? 3 : -3),
-          opacity: 0,
-          stagger: 0.035,
-          ease: "expo.out",
-          duration: 1.1,
-        });
-      }
-      if (kickerRef.current) {
-        gsap.from(kickerRef.current, {
-          y: 40,
-          opacity: 0,
-          delay: 0.35,
-          ease: "power3.out",
-          duration: 1,
-        });
-      }
-      if (ctaRef.current) {
-        gsap.from(ctaRef.current, {
-          y: 50,
-          opacity: 0,
-          delay: 0.55,
-          ease: "power3.out",
-          duration: 1,
-        });
-      }
-      if (imgRef.current) {
-        gsap.from(imgRef.current, {
-          y: 60,
-          opacity: 0,
-          delay: 0.7,
-          ease: "power3.out",
-          duration: 1.1,
-        });
-      }
+  const headZone = { x: { min: 0.3, max: 0.8 }, y: { min: 0.2, max: 0.5 } };
 
-      const SPEED_PX_PER_SEC = 80;
+  const inHeadZone = (relX: number, relY: number) =>
+    relX >= headZone.x.min &&
+    relX <= headZone.x.max &&
+    relY >= headZone.y.min &&
+    relY <= headZone.y.max;
 
-      function ensureEnoughContent(el: HTMLElement) {
-        const parent = el.parentElement;
-        if (!parent) return;
-        const requiredVisibleWidth = parent.clientWidth;
-        let attempts = 0;
-        const maxAttempts = 10;
-        while (
-          el.scrollWidth < requiredVisibleWidth * 2 &&
-          attempts < maxAttempts
-        ) {
-          const children = Array.from(el.children).map(
-            (c) => c.cloneNode(true) as ChildNode
-          );
-          children.forEach((c) => el.appendChild(c));
-          attempts++;
+  const handleMouseMove = (e: React.MouseEvent<HTMLImageElement>) => {
+    const el = imgRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const relX = (e.clientX - rect.left) / rect.width;
+    const relY = (e.clientY - rect.top) / rect.height;
+    el.style.cursor = inHeadZone(relX, relY) ? "pointer" : "default";
+  };
+
+  const handlePat = (
+    e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>,
+  ) => {
+    const el = imgRef.current;
+    if (!el || isBeingPatted.current) return;
+    const rect = el.getBoundingClientRect();
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+    const relX = (clientX - rect.left) / rect.width;
+    const relY = (clientY - rect.top) / rect.height;
+    if (!inHeadZone(relX, relY)) return;
+    isBeingPatted.current = true;
+
+    if (patCount.current !== null) patCount.current += 1;
+    showPatMessage(patCount.current, false);
+
+    fetch(`${API_URL}/pats/increment`, { method: "POST" })
+      .then((res) => {
+        if (res.status === 429) {
+          if (patCount.current !== null) patCount.current -= 1;
+          showPatMessage(patCount.current, true);
         }
-      }
+      })
+      .catch(() => {});
 
-      function makeSeamlessTicker(
-        el: HTMLElement | null,
-        direction: "left" | "right"
-      ) {
-        if (!el) return null;
+    gsap
+      .timeline({
+        overwrite: false,
+        onComplete: () => {
+          isBeingPatted.current = false;
+        },
+      })
+      .to(el, { scale: 1.02, duration: 0.12, ease: "power2.out" })
+      .to(el, { scale: 1, duration: 0.6, ease: "elastic.out(1.2, 0.4)" });
 
-        ensureEnoughContent(el);
+    spawnHearts();
+  };
 
-        let loopSpan = el.scrollWidth / 2;
-        if (!loopSpan || !isFinite(loopSpan) || loopSpan <= 0) return null;
+  const showPatMessage = (count: number | null, rateLimited: boolean) => {
+    const container = containerRef.current;
+    if (!container) return;
 
-        let wrap = gsap.utils.wrap(-loopSpan, 0);
+    container.querySelectorAll("[data-pat-msg]").forEach((el) => el.remove());
 
-        gsap.set(el, { x: 0 });
+    const msg = document.createElement("div");
+    msg.setAttribute("data-pat-msg", "true");
+    msg.innerText = rateLimited
+      ? `Enough headpats for now! (${count ?? "?"} total)`
+      : count === null
+        ? "Nin nin!"
+        : `Izuna has gotten ${count} pats!`;
+    msg.style.cssText = `
+    position: absolute;
+    bottom: -2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: clamp(0.9rem, 1.5vw, 1.25rem);
+    color: #ff5c98;
+    font-family: inherit;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 30;
+  `;
+    container.appendChild(msg);
 
-        let tween = gsap.to(el, {
-          x: direction === "left" ? -loopSpan : loopSpan,
-          duration: Math.max(6, loopSpan / SPEED_PX_PER_SEC),
-          ease: "none",
-          repeat: -1,
-          modifiers: {
-            x: (rawX: string) => {
-              const num = parseFloat(rawX);
-              return `${wrap(num)}px`;
-            },
-          },
+    gsap
+      .timeline()
+      .to(msg, {
+        opacity: 1,
+        y: -6,
+        duration: 0.4,
+        ease: "back.out(2.5)",
+      })
+      .to(msg, {
+        opacity: 0,
+        y: -16,
+        duration: 0.5,
+        ease: "power2.in",
+        delay: 2.5,
+        onComplete: () => msg.remove(),
+      });
+  };
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const spawnHearts = () => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const count = Math.floor(Math.random() * 2) + 2;
+
+    Array.from({ length: count }).forEach((_, i) => {
+      const heart = document.createElement("span");
+      heart.innerHTML = "❤";
+      heart.style.cssText = `
+      position: absolute;
+      bottom: 16%;
+      left: 46%;
+      font-size: clamp(20px, 3vw, 40px);
+      color: white;
+      pointer-events: none;
+      transform: translate(-50%, 0);
+      -webkit-text-stroke: 2px #ff5c98;
+      z-index: 20;
+      `;
+      container.appendChild(heart);
+
+      const angle = -120 + i * (120 / (count - 1));
+      const dist = 90 + Math.random() * 60;
+      const rad = (angle * Math.PI) / 180;
+      const tx = Math.sin(rad) * dist;
+      const ty = -Math.abs(Math.cos(rad)) * dist;
+
+      const randomTilt = (Math.random() - 0.5) * 60; // -+30ish degrees tilt
+
+      gsap
+        .timeline()
+        .to(heart, {
+          x: tx * 0.6,
+          y: ty,
+          scale: 1.2,
+          rotation: randomTilt,
+          duration: 0.35,
+          ease: "power2.out",
+        })
+        .to(heart, {
+          x: tx,
+          y: ty + 30,
+          scale: 0.6,
+          opacity: 0,
+          duration: 0.45,
+          ease: "power1.in",
+          onComplete: () => heart.remove(),
         });
+    });
+  };
 
-        const ro = new ResizeObserver(() => {
-          const newLoopSpan = el.scrollWidth / 2;
-          if (!newLoopSpan || !isFinite(newLoopSpan) || newLoopSpan <= 0)
-            return;
+  useEffect(() => {
+    const el = foxRef.current;
+    if (!el) return;
 
-          if (Math.abs(newLoopSpan - loopSpan) > 1) {
-            loopSpan = newLoopSpan;
-            wrap = gsap.utils.wrap(-loopSpan, 0);
-
-            const currentXRaw = gsap.getProperty(el, "x") as number;
-            tween.kill();
-
-            gsap.set(el, { x: wrap(currentXRaw) });
-
-            tween = gsap.to(el, {
-              x: direction === "left" ? -loopSpan : loopSpan,
-              duration: Math.max(6, loopSpan / SPEED_PX_PER_SEC),
-              ease: "none",
-              repeat: -1,
-              modifiers: {
-                x: (rawX: string) => {
-                  const num = parseFloat(rawX);
-                  return `${wrap(num)}px`;
-                },
-              },
-            });
-          }
-        });
-
-        ro.observe(el);
-
-        const fontPromise = (
-          document as Document & { fonts?: { ready?: Promise<void> } }
-        ).fonts?.ready;
-        if (fontPromise && typeof fontPromise.then === "function") {
-          fontPromise.then(() => {
-            ro.disconnect();
-            ro.observe(el);
-          });
-        }
-
-        return () => {
-          tween && tween.kill();
-          ro.disconnect();
-        };
-      }
-
-      const killTop = makeSeamlessTicker(trackTopRef.current, "left");
-      const killBottom = makeSeamlessTicker(trackBottomRef.current, "right");
-
-      const handleScroll = () => {
-        const offset = window.scrollY * 0.5;
-        if (marqueeRef.current) {
-          gsap.to(marqueeRef.current, {
-            y: offset * 0.8,
-            ease: "power1.out",
-            overwrite: true,
-            duration: 0.6,
-          });
-        }
-        if (marqueeRefBottom.current) {
-          gsap.to(marqueeRefBottom.current, {
-            y: -offset * 0.4,
-            ease: "power1.out",
-            overwrite: true,
-            duration: 0.6,
-          });
-        }
-      };
-      window.addEventListener("scroll", handleScroll);
-
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-        if (killTop) killTop();
-        if (killBottom) killBottom();
-      };
+    gsap.set(el, {
+      transformOrigin: "50% 95%",
+      y: 0,
+      rotation: 0,
+      scaleX: 1,
+      scaleY: 1,
     });
 
-    return () => ctx.revert();
-  }, [reduce]);
+    const tl = gsap.timeline({ repeat: -1 });
 
-  const jp = "イラストレータープロフィール";
-  const displayWords = ["ARTIST", "PROFILE"];
+    tl.to(el, {
+      y: -8,
+      rotation: 1.5,
+      scaleX: 0.98,
+      scaleY: 1.03,
+      duration: 1.8 / 2,
+      ease: "sine.inOut",
+    })
+      .to(el, {
+        y: -10,
+        rotation: 0,
+        scaleX: 1,
+        scaleY: 1.04,
+        duration: 1.4 / 2,
+        ease: "sine.inOut",
+      })
+      .to(el, {
+        y: -4,
+        rotation: -1.5,
+        scaleX: 0.99,
+        scaleY: 1.01,
+        duration: 1.6 / 2,
+        ease: "sine.inOut",
+      })
+      .to(el, {
+        y: 0,
+        rotation: -0.5,
+        scaleX: 1.02,
+        scaleY: 0.98,
+        duration: 0.9 / 2,
+        ease: "power2.out",
+      })
+      .to(el, {
+        rotation: -3,
+        y: -4,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 0.6 / 2,
+        ease: "power1.inOut",
+      })
+      .to(el, { rotation: 2.5, y: -5, duration: 0.9, ease: "power1.inOut" })
+      .to(el, {
+        y: -14,
+        rotation: 0,
+        scaleX: 0.96,
+        scaleY: 1.03,
+        duration: 0.15,
+        ease: "power2.out",
+        onComplete: spawnHearts,
+      })
+      .to(el, {
+        y: 0,
+        scaleX: 1.04,
+        scaleY: 0.96,
+        duration: 0.2,
+        ease: "power2.in",
+      })
+      .to(el, {
+        scaleX: 1,
+        scaleY: 1,
+        y: 0,
+        rotation: 0,
+        duration: 0.5,
+        ease: "sine.inOut",
+      });
+
+    return () => {
+      tl.kill();
+    };
+  }, []);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      tl.fromTo(
+        "[data-hero-line]",
+        { autoAlpha: 0, y: 24 },
+        { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.12 },
+      )
+        .fromTo(
+          "[data-hero-name]",
+          { autoAlpha: 0, y: 24 },
+          { autoAlpha: 1, y: 0, duration: 0.9 },
+          "-=0.8",
+        )
+        .fromTo(
+          "[data-hero-frame]",
+          { autoAlpha: 0, y: 24 },
+          { autoAlpha: 1, y: 0, duration: 0.9 },
+          "-=0.8",
+        );
+    }, root);
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <header className="hero" role="banner">
-      <div
-        className="hero__marquee-bg"
-        aria-hidden
-        ref={marqueeRef}
-        style={{
-          top: 100,
-          willChange: "transform",
-        }}
-      >
-        <div className="hero__marquee-track" ref={trackTopRef}>
-          {Array(8)
-            .fill("SILLYCAT4725")
-            .map((word, i) => (
-              <span className="hero__marquee-text" key={"a" + i}>
-                {word}
-              </span>
-            ))}
-          {Array(8)
-            .fill("SILLYCAT4725")
-            .map((word, i) => (
-              <span className="hero__marquee-text" key={"b" + i}>
-                {word}
-              </span>
-            ))}
-        </div>
+    <section
+      ref={root}
+      id="top"
+      className="relative flex min-h-svh flex-col overflow-hidden border-b border-line"
+    >
+      <div aria-hidden className="absolute inset-0 opacity-[0.56]">
+        <ShapeGrid
+          speed={0.5}
+          squareSize={100}
+          direction="diagonal"
+          borderColor="#373737"
+          hoverFillColor="#222"
+          shape="square"
+          hoverTrailAmount={0}
+        />
       </div>
 
-      <div
-        className="hero__marquee-bg hero__marquee-bg--second"
-        aria-hidden
-        ref={marqueeRefBottom}
-        style={{
-          height: "500px",
-          top: "auto",
-          bottom: -620,
-          willChange: "transform",
-        }}
-      >
-        <div
-          className="hero__marquee-track hero__marquee-track--reverse"
-          ref={trackBottomRef}
+      <header className="relative z-10 flex items-center justify-between px-5 py-5 md:px-44">
+        <span
+          data-hero-line
+          className="font-display text-lg font-bold tracking-[0.15em]"
         >
-          {Array(8)
-            .fill("PORTFOLIO")
-            .map((word, i) => (
-              <span className="hero__marquee-text" key={"c" + i}>
-                {word}
-              </span>
-            ))}
-          {Array(8)
-            .fill("PORTFOLIO")
-            .map((word, i) => (
-              <span className="hero__marquee-text" key={"d" + i}>
-                {word}
-              </span>
-            ))}
-        </div>
-      </div>
-
-      <div className="wrap">
-        <div className="hero__artnote" aria-hidden />
-        <div className="hero__grid" aria-hidden />
-        <div className="hero__layout">
-          <div className="hero__content">
-            <div className="hero__sup">{jp}</div>
-            <h1
-              ref={titleRef}
-              className="hero__title"
-              aria-label={displayWords.join(" ")}
-            >
-              {displayWords.map((w, wi) => (
-                <React.Fragment key={wi}>
-                  <span className="hero__word">
-                    {w.split("").map((l, li) => (
-                      <span key={wi + "-" + li}>{l}</span>
-                    ))}
-                  </span>
-                  {wi < displayWords.length - 1 && <br />}
-                </React.Fragment>
-              ))}
-            </h1>
-            <p ref={kickerRef} className="hero__kicker">
-              Hello, I'm Sillycat4725, currently practicing as a freelance
-              illustrator! I try to keep my artstyle flexible and always pay
-              great attention to detail.
-            </p>
-            <div ref={ctaRef} className="hero__cta">
-              <a
-                className="btn"
-                onClick={(e) => handleHeroScroll(e, "gallery", 30)}
-              >
-                View Work
-              </a>
-              <a
-                className="btn btn--ghost"
-                onClick={(e) => handleHeroScroll(e, "contact")}
-              >
-                Contact
-              </a>
-            </div>
-          </div>
-          <figure
-            className="hero__art"
-            aria-label="Featured character illustration placeholder"
+          @sillycat4725
+        </span>
+        <nav className="hidden items-center gap-8 tech-label text-[11px] text-muted md:flex">
+          <a
+            data-hero-line
+            href="#works"
+            className="transition-colors hover:text-foreground"
           >
-            <picture>
-              <source srcSet="/izuna.webp" type="image/webp" />
+            Works
+          </a>
+          <a
+            data-hero-line
+            href="#clients"
+            className="transition-colors hover:text-foreground"
+          >
+            Commission
+          </a>
+        </nav>
+        <span
+          data-hero-line
+          className="tech-label text-[11px] text-muted md:hidden"
+        >
+          PROFILE
+        </span>
+      </header>
+
+      <div className="relative z-10 grid flex-1 grid-cols-1 items-center gap-8 px-5 pb-10 pt-4 md:grid-cols-[1fr_1fr] md:gap-12 md:px-44 md:pb-12 md:pt-0">
+        <div className="flex flex-col justify-center items-center md:items-start">
+          <div data-hero-line className="mb-5 flex items-center gap-4">
+            <span className="h-px w-12 bg-accent" />
+            <span className="tech-label text-[11px] text-muted">
+              イラストレータープロフィール
+            </span>
+          </div>
+
+          <h1
+            data-hero-name
+            className="font-display font-black italic leading-[0.82] tracking-tight text-center md:text-left"
+            style={{ fontSize: "clamp(2.5rem, 7vw, 8.5rem)" }}
+          >
+            ARTIST PROFILE
+          </h1>
+
+          <div className="mt-4 flex items-center gap-5 justify-center md:justify-start">
+            <span
+              data-hero-line
+              className="font-display tracking-[0.4em] text-muted"
+              style={{ fontSize: "clamp(1rem, 1.8vw, 1.5rem)" }}
+            >
+              @sillycat4725
+            </span>
+            <span
+              data-hero-line
+              className="tech-label text-[12px] text-accent cursor-pointer select-none"
+              onClick={() => setDevRevealed(true)}
+            >
+              ฅ₍^•⩊ •マⳊ
+            </span>
+          </div>
+
+          <p
+            data-hero-line
+            className="mt-8 max-w-xl text-pretty leading-relaxed text-muted text-center md:text-left"
+            style={{ fontSize: "clamp(1rem, 1.5vw, 1.5rem)" }}
+          >
+            Hello, I'm SillyCat, a freelance illustrator! I try to keep my
+            artstyle flexible and always pay great attention to detail.
+            {devRevealed && (
+              <>
+                <DecryptedText
+                  text="I'm also a full-stack developer if you're interested!"
+                  animateOn="view"
+                  sequential
+                  revealDirection="start"
+                />
+              </>
+            )}
+          </p>
+
+          <div
+            data-hero-line
+            className="mt-10 flex items-center gap-3 justify-center md:justify-start"
+          >
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-3 bg-foreground px-7 py-3.5 tech-label text-[16px] text-background transition-colors hover:bg-accent hover:text-accent-foreground"
+            >
+              CONTACT ME
+              <span className="transition-transform group-hover:translate-x-1">
+                ⋙
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div
+          data-hero-frame
+          ref={containerRef}
+          className="relative mx-auto w-auto md:mx-0 md:ml-auto"
+        >
+          <div ref={foxRef}>
+            <div
+              ref={patRef}
+              style={{ display: "contents", cursor: "pointer" }}
+            >
               <img
                 ref={imgRef}
-                src="/izuna.png"
-                alt="Character placeholder"
-                loading="lazy"
-                draggable={false}
+                src="/nin.webp"
+                alt="KEY ART / 001"
+                className="h-full w-full object-cover"
+                style={{ willChange: "transform" }}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={() => {
+                  if (imgRef.current) imgRef.current.style.cursor = "default";
+                }}
+                onMouseDown={handlePat}
+                onTouchStart={handlePat}
               />
-            </picture>
-          </figure>
+            </div>
+          </div>
         </div>
       </div>
-    </header>
+
+      <div className="relative z-10 bg-surface flex items-center justify-between border-t border-line px-5 py-4 md:px-10">
+        <span data-hero-line className="tech-label text-[16px] text-muted-2">
+          🡻 Scroll Down
+        </span>
+        <span data-hero-line className="tech-label text-[16px] text-muted-2">
+          My Works 🡻
+        </span>
+      </div>
+    </section>
   );
 }
-
-export default Hero;
