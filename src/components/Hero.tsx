@@ -1,13 +1,23 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import ShapeGrid from "./ShapeGrid";
+import { API_URL } from "../App";
 
 export function Hero() {
   const root = useRef<HTMLElement>(null);
   const foxRef = useRef<HTMLImageElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
-  const petRef = useRef<HTMLDivElement>(null);
-  const isBeingPetted = useRef(false);
+  const patRef = useRef<HTMLDivElement>(null);
+  const isBeingPatted = useRef(false);
+  const patCount = useRef<number | null>(null);
+
+  useEffect(() => {
+    fetch(`${API_URL}/pats`)
+      .then((r) => r.json())
+      .then((data) => {
+        patCount.current = data.count;
+      });
+  }, []);
 
   const headZone = { x: { min: 0.3, max: 0.8 }, y: { min: 0.2, max: 0.5 } };
 
@@ -26,27 +36,89 @@ export function Hero() {
     el.style.cursor = inHeadZone(relX, relY) ? "pointer" : "default";
   };
 
-  const handlePet = (
+  const handlePat = (
     e: React.MouseEvent<HTMLImageElement> | React.TouchEvent<HTMLImageElement>,
   ) => {
     const el = imgRef.current;
-    if (!el || isBeingPetted.current) return;
+    if (!el || isBeingPatted.current) return;
     const rect = el.getBoundingClientRect();
     const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
     const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
     const relX = (clientX - rect.left) / rect.width;
     const relY = (clientY - rect.top) / rect.height;
     if (!inHeadZone(relX, relY)) return;
-    isBeingPetted.current = true;
+    isBeingPatted.current = true;
+
+    if (patCount.current !== null) patCount.current += 1;
+    showPatMessage(patCount.current, false);
+
+    fetch(`${API_URL}/pats/increment`, { method: "POST" })
+      .then((res) => {
+        if (res.status === 429) {
+          if (patCount.current !== null) patCount.current -= 1;
+          showPatMessage(patCount.current, true);
+        }
+      })
+      .catch(() => {});
+
     gsap
       .timeline({
         overwrite: false,
         onComplete: () => {
-          isBeingPetted.current = false;
+          isBeingPatted.current = false;
         },
       })
       .to(el, { scale: 1.02, duration: 0.12, ease: "power2.out" })
       .to(el, { scale: 1, duration: 0.6, ease: "elastic.out(1.2, 0.4)" });
+
+    spawnHearts();
+  };
+
+  const showPatMessage = (count: number | null, rateLimited: boolean) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    container.querySelectorAll("[data-pat-msg]").forEach((el) => el.remove());
+
+    const msg = document.createElement("div");
+    msg.setAttribute("data-pat-msg", "true");
+    msg.innerText = rateLimited
+      ? `Enough headpats for now! (${count ?? "?"} total)`
+      : count === null
+        ? "Nin nin!"
+        : `Izuna has gotten ${count} pats!`;
+    msg.style.cssText = `
+    position: absolute;
+    bottom: -2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: clamp(0.9rem, 1.5vw, 1.25rem);
+    color: #ff5c98;
+    font-family: inherit;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 30;
+  `;
+    container.appendChild(msg);
+
+    gsap
+      .timeline()
+      .to(msg, {
+        opacity: 1,
+        y: -6,
+        duration: 0.4,
+        ease: "back.out(2.5)",
+      })
+      .to(msg, {
+        opacity: 0,
+        y: -16,
+        duration: 0.5,
+        ease: "power2.in",
+        delay: 2.5,
+        onComplete: () => msg.remove(),
+      });
   };
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -121,7 +193,7 @@ export function Hero() {
       rotation: 1.5,
       scaleX: 0.98,
       scaleY: 1.03,
-      duration: 1.8,
+      duration: 1.8 / 2,
       ease: "sine.inOut",
     })
       .to(el, {
@@ -129,7 +201,7 @@ export function Hero() {
         rotation: 0,
         scaleX: 1,
         scaleY: 1.04,
-        duration: 1.4,
+        duration: 1.4 / 2,
         ease: "sine.inOut",
       })
       .to(el, {
@@ -137,16 +209,15 @@ export function Hero() {
         rotation: -1.5,
         scaleX: 0.99,
         scaleY: 1.01,
-        duration: 1.6,
+        duration: 1.6 / 2,
         ease: "sine.inOut",
-        onComplete: spawnHearts,
       })
       .to(el, {
         y: 0,
         rotation: -0.5,
         scaleX: 1.02,
         scaleY: 0.98,
-        duration: 0.9,
+        duration: 0.9 / 2,
         ease: "power2.out",
       })
       .to(el, {
@@ -154,7 +225,7 @@ export function Hero() {
         y: -4,
         scaleX: 1,
         scaleY: 1,
-        duration: 0.6,
+        duration: 0.6 / 2,
         ease: "power1.inOut",
       })
       .to(el, { rotation: 2.5, y: -5, duration: 0.9, ease: "power1.inOut" })
@@ -323,7 +394,7 @@ export function Hero() {
         >
           <div ref={foxRef}>
             <div
-              ref={petRef}
+              ref={patRef}
               style={{ display: "contents", cursor: "pointer" }}
             >
               <img
@@ -336,8 +407,8 @@ export function Hero() {
                 onMouseLeave={() => {
                   if (imgRef.current) imgRef.current.style.cursor = "default";
                 }}
-                onMouseDown={handlePet}
-                onTouchStart={handlePet}
+                onMouseDown={handlePat}
+                onTouchStart={handlePat}
               />
             </div>
           </div>

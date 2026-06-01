@@ -170,7 +170,7 @@ export function Clients() {
       </Reveal>
 
       {error && (
-        <p className="tech-label text-sm text-accent mb-6">
+        <p className="tech-label text-sm text-accent mb-6 z-50">
           Could not fetch the list. Try reloading maybe?
         </p>
       )}

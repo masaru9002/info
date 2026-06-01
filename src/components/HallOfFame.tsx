@@ -284,7 +284,7 @@ export function HallOfFame() {
 
       <Reveal>
         {error && (
-          <p className="tech-label text-sm text-accent">
+          <p className="tech-label text-sm text-accent z-50">
             Could not fetch patrons. Try reloading maybe?
           </p>
         )}

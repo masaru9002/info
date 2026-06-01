@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { HallOfFame } from "./HallOfFame";
 import Iridescence from "./Iridescence";
 import { Reveal } from "./reveal";
@@ -26,6 +27,10 @@ const LINKS = [
 ];
 
 export function Contact() {
+  useEffect(() => {
+    const t = setTimeout(() => ScrollTrigger.refresh(), 100);
+    return () => clearTimeout(t);
+  }, []);
   return (
     <section
       id="contact"
