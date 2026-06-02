@@ -91,8 +91,8 @@ export function Works() {
         {!error && (
           <Masonry
             breakpointCols={breakpoints}
-            className="flex gap-3 sm:gap-4 min-h-96"
-            columnClassName="flex flex-col gap-3 sm:gap-4"
+            className="flex -mx-1.5 sm:-mx-2 min-h-96"
+            columnClassName="flex flex-col px-1.5 sm:px-2 gap-3 sm:gap-4"
           >
             {(isLoading || (!data && !error)) &&
               Array.from({ length: 5 }).map((_, i) => (
