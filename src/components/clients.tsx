@@ -51,7 +51,7 @@ function AvatarCell({ src }: { src: string }) {
   }, [src]);
 
   return (
-    <div className="hidden h-11 w-11 shrink-0 border border-line bg-surface-2 overflow-hidden sm:block">
+    <div className="h-11 w-11 shrink-0 border border-line bg-surface-2 overflow-hidden">
       <img
         src={imgSrc}
         alt=""
@@ -215,7 +215,7 @@ export function Clients() {
               {slot.status === "Open" ? (
                 <div
                   aria-hidden
-                  className="hidden h-11 w-11 shrink-0 border border-line bg-surface-2 sm:block"
+                  className="h-11 w-11 shrink-0 border border-line bg-surface-2"
                   style={{
                     backgroundImage:
                       "repeating-linear-gradient(135deg, transparent 0 6px, var(--surface) 6px 7px)",
