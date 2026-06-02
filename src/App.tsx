@@ -27,7 +27,7 @@ export default function App() {
           enableShaderEffect={false}
         />
       </div>
-      <main className="bg-background text-foreground">
+      <main className="bg-background text-foreground overflow-x-hidden">
         <Hero />
         <Works />
         <Clients />
